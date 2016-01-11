@@ -54,5 +54,44 @@ for(var b of a()) {
 }
 ```
 
-#### Back to the task at hand
+#### Back to the task at hand, how does this help us flatten async code?
+We've seen that, if someone gives us a generator function, we can call it to get a generator object back.  This generator object then lets us control how the original generator function is 'run' - we can call `next()` which runs the generator function and gives us back the next value `yield`ed.
+
+If, for example, a Promise is yielded from the generator function, we can choose to wait on that Promise before we call `next()` again - allowing us to do stuff like this:
+
+```js
+// runner is the function we will make to 'run' async code
+// in a generator function
+runner(function*() {
+    yield doSomethingAsync();
+    yield doAnotherAsyncThing();
+    yield doMoreAsyncStuff();
+});
+```
+In this scenario we can be sure that `doSomethingAsync` has completed before `doAnotherAsyncThing` is called (likewise with the subsequent call to `doMoreAsyncStuff`).  We now have async code which *looks* synchronous - we're already halfway there!  The code for `runner` at this stage would look something like this:
+
+```js
+function runner(genFn) {
+    // get our generator object
+    var gen = genFn();
+
+    // since we may have to wait, use the naive approach of recursion
+    function step() {
+        var next = gen.next();
+        if(next.value instanceof Promise) {
+            // wait on Promise and step on success or failure
+            next.value.then(step, step);
+        } else {
+            // to prevent blowing stack, use Promise to call step
+            Promise.resolve().then(step);
+        }
+    }
+
+    // start the process going
+    step();
+}
+```
+This is great, but what if the Promise we wait on rejects?
+
+#### Handling asynchronous errors
 > TODO
