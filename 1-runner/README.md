@@ -94,4 +94,35 @@ function runner(genFn) {
 This is great, but what if the Promise we wait on rejects?
 
 #### Handling asynchronous errors
+Fortunately, as well as being iterators, generator objects also expose a method (`throw(err)`) which allows us to *pass an error back into* the generator function.  This results in the exception we 'pass in' being thrown like a regular `throw <Error>` would, at the site of the latest `yield`.
+
+So if we decide to catch Promise rejections and then `throw` the error that the Promise was rejected with, our `runner` code now becomes:
+```js
+function runner(genFn) {
+    // get our generator object
+    var gen = genFn();
+
+    // since we may have to wait, use the naive approach of recursion
+    function step() {
+        var next = gen.next();
+        if(next.value instanceof Promise) {
+            // wait on Promise and step on success or throw on failure
+            next.value.then(step, function(err) {
+                // catch any rejections and 're-throw' from within the
+                // generator function
+                gen.throw(err);
+            });
+        } else {
+            // to prevent blowing stack, use Promise to call step
+            Promise.resolve().then(step);
+        }
+    }
+
+    // start the process going
+    step();
+}
+```
+We're now only one piece away from a fully working (albeit minimal and rudimentary) implementation of  `co` in under 20 lines of code, so what is that missing piece?
+
+#### Passing values back to the generator function
 > TODO
