@@ -78,11 +78,15 @@ function runner(genFn) {
     // since we may have to wait, use the naive approach of recursion
     function step() {
         var next = gen.next();
+
+        // bail when the generator function is done
+        if(next.done) return;
+
         if(next.value instanceof Promise) {
             // wait on Promise and step on success or failure
             next.value.then(step, step);
         } else {
-            // to prevent blowing stack, use Promise to call step
+            // to prevent blowing the stack, use a Promise to call step
             Promise.resolve().then(step);
         }
     }
@@ -97,6 +101,7 @@ This is great, but what if the Promise we wait on rejects?
 Fortunately, as well as being iterators, generator objects also expose a method (`throw(err)`) which allows us to *pass an error back into* the generator function.  This results in the exception we 'pass in' being thrown like a regular `throw <Error>` would, at the site of the latest `yield`.
 
 So if we decide to catch Promise rejections and then `throw` the error that the Promise was rejected with, our `runner` code now becomes:
+
 ```js
 function runner(genFn) {
     // get our generator object
@@ -105,6 +110,10 @@ function runner(genFn) {
     // since we may have to wait, use the naive approach of recursion
     function step() {
         var next = gen.next();
+
+        // bail when the generator function is done
+        if(next.done) return;
+
         if(next.value instanceof Promise) {
             // wait on Promise and step on success or throw on failure
             next.value.then(step, function(err) {
@@ -113,7 +122,7 @@ function runner(genFn) {
                 gen.throw(err);
             });
         } else {
-            // to prevent blowing stack, use Promise to call step
+            // to prevent blowing the stack, use a Promise to call step
             Promise.resolve().then(step);
         }
     }
@@ -125,4 +134,49 @@ function runner(genFn) {
 We're now only one piece away from a fully working (albeit minimal and rudimentary) implementation of  `co` in under 20 lines of code, so what is that missing piece?
 
 #### Passing values back to the generator function
-> TODO
+So far we've only called `next()` on the generator object without any parameters - it turns out that you can actually do `next(value)`, which will *pass a value back into the generator function* which is used within the function as the result of the `yield` expression.
+
+```js
+function* genFunc() {
+    console.log(yield null);
+}
+
+var g = genFunc();
+g.next(1); // runs genFunc to the first yield => console.log not called yet
+g.next(2); // 'returns' 2 from the yield => '2' logged to console
+```
+
+Combining this with our existing `runner` code gives us our finished implementation, which can be saved as `index.js` in this folder and tested by running `node test.js`.
+
+```js
+module.exports = function runner(genFn) {
+    // get our generator object
+    var gen = genFn();
+
+    // since we may have to wait, use the naive approach of recursion
+    // as this is a callback for a promise - accept the resolved value
+    // and pass it back into the generator function when we call 'next'
+    function step(value) {
+        var next = gen.next(value);
+
+        // bail when the generator function is done
+        if(next.done) return;
+
+        if(next.value instanceof Promise) {
+            // wait on Promise and step on success or throw on failure
+            next.value.then(step, function(err) {
+                // catch any rejections and 're-throw' from within the
+                // generator function
+                gen.throw(err);
+            });
+        } else {
+            // to prevent blowing the stack, use a Promise to call step
+            // make sure we pass next.value through to 'step'!
+            Promise.resolve(next.value).then(step);
+        }
+    }
+
+    // start the process going (no initial value)
+    step();
+};
+```
