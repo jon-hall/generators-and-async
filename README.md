@@ -18,4 +18,7 @@ Project walkthroughs:
  - [1-runner](1-runner/README.md)
 
 #### Further reading
-> TODO
+
+ - [Koa](https://github.com/koajs/koa/tree/9f80296fc49fa0c03db939e866215f3721fcbbc6) - a web framework (currently) based on generators, using [co](https://github.com/tj/co).
+ - [Generators are iterators and iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols) - in-depth coverage of the `iterable` and `iterator` protocols, including generator objects.
+ - [Async/await today with babel](http://masnun.com/2015/11/11/using-es7-asyncawait-today-with-babel.html) - a small article covering the basic setup of writing similarly flattened async code using the upcoming [async/await](https://github.com/tc39/ecmascript-asyncawait) syntax by [transpiling](https://en.wikipedia.org/wiki/Source-to-source_compiler) with [babel](http://babeljs.io/).
