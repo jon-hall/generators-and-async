@@ -75,12 +75,28 @@ var co = require('co'),
     thfRegex = /^thf/;
 
 co(function*() {
-    // TODO: yield on some Promises..
-    /* old Promisey code goes here */
+    try {
+        // TODO: yield on some Promises..
+        /* old Promisey code goes here */
+
+    } catch(err) {
+        console.error(err);
+    }
 });
 ```
 
 Replace each `.then` call with a `yield` into a variable (which receives the result), and any error callbacks (the second argument to `.then`) can be replaced by putting code in a `try`/`catch` block.
+
+#### Yielding loops
+You'll need to do `yield`s inside of the `files` array loop, since `.forEach` doesn't accept generator functions we need a different way to loop (as we won't be able to `yield` in the loop if we aren't in a generator function).  The simplest solution is to convert it back to a regular `for` loop:
+
+```js
+for(var i = 0; i < files.length; i++) {
+    var file = files[i];
+    /* ... */
+    yield fs.rename(/* ... */);
+}
+```
 
 Test your code by running `node index.js` from a command prompt in the directory - if it renames the files in the `/stuff` folder then it worked.  If not, then there's a spare copy of the files, to reset with, in `/stuff_backup`.
 
