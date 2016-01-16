@@ -11,7 +11,7 @@ You'll also need git (or a git client) to clone this repo.
 #### Projects
 Each folder contains a mini-project with it's own README which explains some of the concepts being illustrated, and how to complete each exercise, if you want to try it for yourself.  
 
-Completed versions of each of the projects will be found on the `completed` branch if you just want to skip to a finished version and look at, or play with, the code.
+Completed versions of each of the projects will be found on the [`completed`](jon-hall/generators-and-async/tree/completed) branch if you just want to skip to a finished version and look at, or play with, the code.
 
 Project walkthroughs:
  - [0-co](0-co/README.md)
