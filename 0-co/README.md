@@ -100,4 +100,4 @@ for(var i = 0; i < files.length; i++) {
 
 Test your code by running `node index.js` from a command prompt in the directory - if it renames the files in the `/stuff` folder then it worked.  If not, then there's a spare copy of the files, to reset with, in `/stuff_backup`.
 
-If you want to go straight to the finished product then checkout the `completed` branch.
+If you want to go straight to the finished product then checkout the [`completed`](jon-hall/generators-and-async/tree/completed/0-co) branch.
