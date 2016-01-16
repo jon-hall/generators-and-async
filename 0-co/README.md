@@ -19,7 +19,7 @@ function* aGeneratorFunction() {
 
 #### How this enables flat async code
 
-By running our generator function within a library such as [`co`](https://github.com/tj/co), we can take Promise-based code like this
+By running our generator function within a library such as [`co`](//github.com/tj/co), we can take Promise-based code like this
 
 ```js
 doSomethingAsync()
@@ -56,7 +56,7 @@ We can also do stuff like overwrite `result` on the same line as passing it to `
 
 #### Converting existing Promise-based code
 
-The `index.js` file in this repo shows a *promisified* version of the renamer application from the [node-intro](https://github.com/jon-hall/node-intro), the original version is also included for reference (`index_orig.js`).
+The `index.js` file in this repo shows a *promisified* version of the renamer application from the [node-intro](//github.com/jon-hall/node-intro), the original version is also included for reference (`index_orig.js`).
 
 Use the example code above to convert the `index.js` file to use `co` and `yield` on each of the Promises.
 
@@ -100,4 +100,4 @@ for(var i = 0; i < files.length; i++) {
 
 Test your code by running `node index.js` from a command prompt in the directory - if it renames the files in the `/stuff` folder then it worked.  If not, then there's a spare copy of the files, to reset with, in `/stuff_backup`.
 
-If you want to go straight to the finished product then checkout the [`completed`](jon-hall/generators-and-async/tree/completed/0-co) branch.
+If you want to go straight to the finished product then checkout the [`completed`](//github.com/jon-hall/generators-and-async/tree/completed/0-co) branch.
