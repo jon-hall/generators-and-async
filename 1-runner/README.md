@@ -1,4 +1,6 @@
-## 1 - runner
+## 1 - runner (completed branch)
+> This is the completed branch, for the incomplete version go [here](jon-hall/generators-and-async/tree/master/1-runner).
+
 This project covers a little on how generators actually work and how we are able to leverage them to flatten async code.
 The end result is writing a (greatly simplified) version of `co` - the library we used to 'run' our generator function in the first example.
 

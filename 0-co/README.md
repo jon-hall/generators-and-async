@@ -1,4 +1,5 @@
-## 0 - co
+## 0 - co (completed branch)
+> This is the completed branch, for the incomplete version go [here](jon-hall/generators-and-async/tree/master/0-co).
 
 This project introduces how generators can help us write flatter code.  It covers how to convert Promise-based code to flatter, synchronous-looking, generator-based code.  It doesn't actually explore *how* this works, that is left for the other example to explore.
 
@@ -99,5 +100,3 @@ for(var i = 0; i < files.length; i++) {
 ```
 
 Test your code by running `node index.js` from a command prompt in the directory - if it renames the files in the `/stuff` folder then it worked.  If not, then there's a spare copy of the files, to reset with, in `/stuff_backup`.
-
-If you want to go straight to the finished product then checkout the `completed` branch.
