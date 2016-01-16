@@ -1,30 +1,36 @@
-var promisify = require('promisify-node'),
+var co = require('co'),
+    promisify = require('promisify-node'),
     fs = promisify('fs'),
     thfRegex = /^thf/;
 
-fs.readdir('./stuff').then(function(files) {
-    console.log('Renaming files...');
-    files.forEach(function(file) {
-        var relativeName,
-            newName;
+co(function*() {
+    try {
+        // Get the list of files by yielding on readdir
+        var files = yield fs.readdir('./stuff');
 
-        if(!thfRegex.test(file)) {
-            // Skip files whose names don't contain the string to be replaced
-            return;
-        }
+        console.log('Renaming files...');
+        for(var i = 0; i < files.length; i++) {
+            var file = files[i],
+                relativeName,
+                newName;
 
-        // Calculate the current name (relative to cwd), and the new name
-        relativeName = './stuff/' + file;
-        newName = './stuff/' + file.replace(thfRegex, 'wvk');
+            if(!thfRegex.test(file)) {
+                // Skip files whose names don't contain the string to be replaced
+                continue;
+            }
 
-        // Do the rename and resume execution once done
-        fs.rename(relativeName, newName).then(function() {
+            // Calculate the current name (relative to cwd), and the new name
+            relativeName = './stuff/' + file;
+            newName = './stuff/' + file.replace(thfRegex, 'wvk');
+
+            // Yield on the rename and resume execution once done
+            yield fs.rename(relativeName, newName);
+
             // Console.log in node supports a basic printf-type syntax
             console.log('Renamed "%s" to "%s"', relativeName, newName);
-        }, function(err) {
-            console.error(err);
-        });
-    });
-}, function(err) {
-    console.error(err);
+        }
+    } catch(err) {
+        // Catch all errors here
+        console.error(err);
+    }
 });
