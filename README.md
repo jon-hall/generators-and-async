@@ -6,7 +6,7 @@ An introduction to how generators can be leveraged to flatten asynchronous code 
 It comprises two basic exercises, the first of which illustrates how Promise-based code can be de-cluttered using generators to 'await' on promises.  In the other example, we build our own miniature version of the library used in the first project (`co`) to understand how it actually works under the hood.
 
 #### Prerequisites
-In order to run the projects in this repo you'll need to have a version of node (preferably `>=4.0.0`) installed (you can check your version by entering `node -v` in a command prompt).  You can get the installer from [here](//nodejs.org) if you don't have node yet, or want to update.
+In order to run the projects in this repo you'll need to have a version of node (`>=4.0.0`) installed (you can check your version by entering `node -v` in a command prompt).  You can get the installer from [here](//nodejs.org) if you don't have node yet, or want to update.
 
 You'll also need git (or a git client) to clone this repo.
 
